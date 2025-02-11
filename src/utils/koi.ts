@@ -87,60 +87,65 @@ export function koiNoticeInfo(message: any, title = "温馨提示", duration = 2
 }
 
 /** 封装提示信息，默认info */
-export function koiMsg(message: any, duration = 2000, type: MessageType = "info", parseHtml = false) {
+export function koiMsg(message: any, plain = false, duration = 2000, type: MessageType = "info", parseHtml = false) {
   ElMessage.closeAll();
   ElMessage({
     message,
-    type,
+    plain: plain,
     duration: duration,
+    type,
     showClose: true,
     dangerouslyUseHTMLString: parseHtml
   });
 }
 
 /** 封装提示信息，默认success */
-export function koiMsgSuccess(message: any, duration = 2000, type: MessageType = "success", parseHtml = false) {
+export function koiMsgSuccess(message: any, plain = false, duration = 2000, type: MessageType = "success", parseHtml = false) {
   ElMessage.closeAll();
   ElMessage({
     message,
-    type,
+    plain: plain,
     duration: duration,
+    type,
     showClose: true,
     dangerouslyUseHTMLString: parseHtml
   });
 }
 
 /** 封装提示信息，默认error */
-export function koiMsgError(message: any, duration = 2000, type: MessageType = "error", parseHtml = false) {
+export function koiMsgError(message: any, plain = false, duration = 2000, type: MessageType = "error", parseHtml = false) {
   ElMessage.closeAll();
   ElMessage({
     message,
-    type,
+    plain: plain,
     duration: duration,
+    type,
     showClose: true,
     dangerouslyUseHTMLString: parseHtml
   });
 }
 
 /** 封装提示信息，默认warning */
-export function koiMsgWarning(message: any, duration = 2000, type: MessageType = "warning", parseHtml = false) {
+export function koiMsgWarning(message: any, plain = false, duration = 2000, type: MessageType = "warning", parseHtml = false) {
   ElMessage.closeAll();
   ElMessage({
     message,
-    type,
+    plain: plain,
     duration: duration,
+    type,
     showClose: true,
     dangerouslyUseHTMLString: parseHtml
   });
 }
 
 /** 封装提示信息，默认info */
-export function koiMsgInfo(message: any, duration = 2000, type: MessageType = "info", parseHtml = false) {
+export function koiMsgInfo(message: any, plain = false, duration = 2000, type: MessageType = "info", parseHtml = false) {
   ElMessage.closeAll();
   ElMessage({
     message,
-    type,
+    plain: plain,
     duration: duration,
+    type,
     showClose: true,
     dangerouslyUseHTMLString: parseHtml
   });

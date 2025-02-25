@@ -7,7 +7,7 @@
         class="w-100% h-100% rounded-full"
       >
         <template #error>
-          <el-icon class="w-100% h-100% rounded-full c-[--el-color-primary]" :size="34">
+          <el-icon class="w-100% h-100% rounded-full text-[--el-color-primary]" :size="34">
             <CircleCloseFilled />
           </el-icon>
         </template>
@@ -20,7 +20,7 @@
         class="w-100% h-100% rounded-full"
       >
         <template #error>
-          <el-icon class="w-100% h-100% rounded-full c-[--el-color-primary]" :size="34">
+          <el-icon class="w-100% h-100% rounded-full text-[--el-color-primary]" :size="34">
             <CircleCloseFilled />
           </el-icon>
         </template>
@@ -33,7 +33,7 @@
         class="w-100% h-100% rounded-full"
       >
         <template #error>
-          <el-icon class="w-100% h-100% rounded-full c-[--el-color-primary]" :size="34">
+          <el-icon class="w-100% h-100% rounded-full text-[--el-color-primary]" :size="34">
             <CircleCloseFilled />
           </el-icon>
         </template>

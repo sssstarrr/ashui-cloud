@@ -102,7 +102,7 @@
                 "
               >
                 <template #error>
-                  <el-icon class="c-[--el-color-primary]" :size="36">
+                  <el-icon class="text-[--el-color-primary]" :size="36">
                     <CircleCloseFilled />
                   </el-icon>
                 </template>

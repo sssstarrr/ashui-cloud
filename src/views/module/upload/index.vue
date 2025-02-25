@@ -25,7 +25,7 @@
     <div class="h-20px"></div>
     <!-- 多图片上传示例 -->
     <KoiUploadImages v-model:file-list="imageList" :drag="false">
-      <template #empty>
+      <template #content>
         <el-icon><Picture /></el-icon>
         <span>请上传照片</span>
       </template>

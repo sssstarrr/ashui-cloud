@@ -42,13 +42,6 @@
             </div>
             <div class="flex flex-justify-between flex-wrap p-y-12px">
               <div class="flex flex-items-center">
-                <el-icon size="15"> <Postcard /> </el-icon>
-                <div class="p-l-2px">所属部门</div>
-              </div>
-              <div v-text="mine.deptName"></div>
-            </div>
-            <div class="flex flex-justify-between flex-wrap p-y-12px">
-              <div class="flex flex-items-center">
                 <el-icon size="15"> <Collection /> </el-icon>
                 <div class="p-l-2px">所属角色</div>
               </div>
@@ -150,7 +143,6 @@ const mine = ref({
   userName: "于金金",
   phone: "18593114301",
   email: "yuxintao6@163.com",
-  deptName: "研发部门",
   roleName: "超级管理员",
   createTime: "2023-11-23 18:00:00"
 });

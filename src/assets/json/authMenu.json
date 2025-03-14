@@ -88,41 +88,7 @@
       "redirect": ""
     },
     {
-      "menuId": 16,
-      "menuName": "部门管理",
-      "enName": "Dept Manage",
-      "parentId": 1,
-      "menuType": "2",
-      "path": "/system/dept",
-      "name": "deptPage",
-      "component": "system/dept/index",
-      "icon": "Histogram",
-      "isHide": "1",
-      "isLink": "",
-      "isKeepAlive": "0",
-      "isFull": "1",
-      "isAffix": "1",
-      "redirect": ""
-    },
-    {
-      "menuId": 17,
-      "menuName": "岗位管理",
-      "enName": "Post Manage",
-      "parentId": 1,
-      "menuType": "2",
-      "path": "/system/post",
-      "name": "postPage",
-      "component": "system/post/index",
-      "icon": "Postcard",
-      "isHide": "1",
-      "isLink": "",
-      "isKeepAlive": "0",
-      "isFull": "1",
-      "isAffix": "1",
-      "redirect": ""
-    },
-    {
-      "menuId": 18,
+      "menuId": 15,
       "menuName": "登录日志",
       "enName": "Login Logs",
       "parentId": 1,
@@ -139,7 +105,7 @@
       "redirect": ""
     },
     {
-      "menuId": 19,
+      "menuId": 16,
       "menuName": "操作日志",
       "enName": "Operate Logs",
       "parentId": 1,
@@ -156,7 +122,7 @@
       "redirect": ""
     },
     {
-      "menuId": 20,
+      "menuId": 17,
       "menuName": "通知公告",
       "enName": "Notice Manage",
       "parentId": 1,
@@ -173,7 +139,7 @@
       "redirect": ""
     },
     {
-      "menuId": 21,
+      "menuId": 18,
       "menuName": "个人中心",
       "enName": "Personage Center",
       "parentId": 1,

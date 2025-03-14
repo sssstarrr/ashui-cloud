@@ -17,7 +17,7 @@
         <!-- 备案号-->
         <div class="beianhao select-none <md:hidden">
           <a class="chroma-text" href="https://beian.miit.gov.cn/" target="_blank"
-            >{{ $t("login.beianhao") }}：豫ICP备2022022094号-1</a
+            >{{ $t("login.beianhao") }}：蜀ICP备2024086278号</a
           >
         </div>
       </el-col>
@@ -103,7 +103,7 @@ import useKeepAliveStore from "@/stores/modules/keepAlive.ts";
 import { HOME_URL, LOGIN_URL } from "@/config/index.ts";
 import { initDynamicRouter } from "@/routers/modules/dynamicRouter.ts";
 import useTabsStore from "@/stores/modules/tabs.ts";
-import logo from "@/assets/images/logo/logo.webp";
+import logo from "@/assets/images/logo/logo.svg";
 import bg from "@/assets/images/login/bg.png";
 import settings from "@/settings";
 import KoiDark from "./components/KoiDark.vue";

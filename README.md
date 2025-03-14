@@ -2,9 +2,9 @@
   <img src="https://pic4.zhimg.com/v2-702a23ebb518199355099df77a3cfe07_b.webp" width="200" height="200" />
 </p>
 
-<h1 align="center">KOI-UI🌻</h1>
+<h1 align="center">ashui Cloud🌻</h1>
 
-<p align="center">一款<b>开箱即用</b>的 Vue3 中后台管理系统框架[纯前端]</p>
+<p align="center">基于<b>开箱即用</b>的 Vue3 后台管理系统框架KOI-UI</p>
 
 <p align="center">
   <span>&nbsp;[&nbsp;</span>
@@ -13,25 +13,9 @@
   <span>&nbsp;]&nbsp;</span>
 <p>
 
-<p align="center">
-  <span>&nbsp;[&nbsp;</span>
-  前后端演示[159元]
-  <a href="http://39.107.143.109/login" target="_blank">点击这里</a>
-  <span>&nbsp;]&nbsp;</span>
-<p>
-<p align="center">
-  <span>&nbsp;[&nbsp;</span>
-  博客演示[366元]
-  <a href="http://39.107.143.109:8188/home/index" target="_blank">点击这里</a>
-  <span>&nbsp;]&nbsp;</span>
-<p>
-
-前后端版本模版[159元]：SpringBoot3、JDK17、Sa-Token等技术；
-博客版本[366元]：博客 + 管理平台；
-
 ## 1、简介
 
-KOI-UI🌻 是一款开源企业级别的中后台管理平台模板，基于 Vue3、Vite、TypeScript、Pinia、Pinia持久化插件、Unocss 和 ElementPlus等前端最新技术栈。相较于其他比较流行的后台管理模板，更加简洁、快捷和容易理解，对萌新小白十分友好。此项目学习成本非常低含有相关代码注释以及大量的案例，非常适合企业级项目、中小型项目、个人项目以及毕业设计。后续将用户、角色、菜单、字典管理和通用管理平台页面依次编写，做到直接对接后端接口即可，使之快速开发。常见的组件有小伙伴提供可提issus会依次封装进去展示。
+本项目基于KOI-UI🌻框架进行二次开发
 
 ## 2、特点
 
@@ -122,11 +106,7 @@ KOI-UI🌻 是一款开源企业级别的中后台管理平台模板，基于 Vu
   </tr>
 </table>
 
-## 5、支持
-
-如果觉得 KOI-ADMIN🌻这个框架不错，或者已经在使用了，希望你可以在 **Github** 或者 **Gitee(码云)** 帮我点个 ⭐ ，这将对我是极大的鼓励。
-
-## 6、快速开始
+## 5、快速开始
 
 ```properties
 # 若未配置pnpm，请先下载并配置镜像
@@ -137,7 +117,7 @@ pnpm install
 pnpm run dev
 ```
 
-## 7、打包发布
+## 6、打包发布
 
 ```properties
 # 构建环境
@@ -145,32 +125,3 @@ pnpm build
 # 生产环境
 pnpm build:prod
 ```
-
-## 8、源码
-
-<p align="left">
-  <span>&nbsp;[&nbsp;</span>
-  Gitee仓库
-  <a href="https://gitee.com/BigCatHome/koi-ui.git" target="_blank">点击这里</a>
-  <span>&nbsp;]&nbsp;</span>
-<p>
-<p align="left">
-  <span>&nbsp;[&nbsp;</span>
-  GitHub仓库
-  <a href="https://github.com/yuxintao6/koi-ui.git" target="_blank">点击这里</a>
-  <span>&nbsp;]&nbsp;</span>
-<p>
-
-## 9、入群交流
-
-> 注意：加微信方式时记得添加备注：KOI-UI，支持知识付费。
-```properties
-# 有问题可群内提问或私信，作者闲暇时间有限，支持知识付费！
-```
-
-<table>
-    <tr>
-        <td><img src="https://gitee.com/BigCatHome/koi-photo/raw/master/photos/KOI-ADMIN/WeChat.png"/></td>
-        <td><img src="https://gitee.com/BigCatHome/koi-photo/raw/master/photos/KOI-ADMIN/WeChatPay.png"/></td>
-    </tr>
-</table>

@@ -96,8 +96,8 @@ import { ref, reactive, onMounted, onUnmounted, computed } from "vue";
 import type { FormInstance, FormRules } from "element-plus";
 import { koiMsgWarning, koiMsgError } from "@/utils/koi.ts";
 import { useRouter } from "vue-router";
-// import { koiLogin, getCaptcha } from "@/api/system/login/index.ts";
-import authLogin from "@/assets/json/authLogin.json";
+import { koiLogin, getCaptcha } from "@/api/system/login/index.ts";
+// import authLogin from "@/assets/json/authLogin.json";
 import useUserStore from "@/stores/modules/user.ts";
 import useKeepAliveStore from "@/stores/modules/keepAlive.ts";
 import { HOME_URL, LOGIN_URL } from "@/config/index.ts";
@@ -138,9 +138,9 @@ interface ILoginUser {
 }
 
 const loginForm = reactive<ILoginUser>({
-  loginName: "yuadmin",
-  password: "123456",
-  securityCode: "1234",
+  loginName: "admin",
+  password: "admin123",
+  securityCode: "",
   codeKey: "",
   captchaPicture: ""
 });
@@ -164,38 +164,38 @@ loginRules = computed(() => {
 
 /** 获取验证码 */
 const handleCaptcha = async () => {
-  // try {
-  //   const res: any = await getCaptcha();
-  //   loginForm.codeKey = res.data.codeKey;
-  //   loginForm.captchaPicture = res.data.captchaPicture;
-  // } catch (error) {
-  //   console.log(error);
-  //   koiMsgError("验证码获取失败🌻");
-  // }
+  try {
+    const res: any = await getCaptcha();
+    loginForm.codeKey = res.data.uuid;
+    loginForm.captchaPicture = "data:image/jpg;base64," + res.data.img;
+  } catch (error) {
+    console.log(error);
+    koiMsgError("验证码获取失败🌻");
+  }
 };
 
-// const koiTimer = ref();
-// // 验证码定时器
-// const getCaptchaTimer = () => {
-//   koiTimer.value = setInterval(() => {
-//     // 执行刷新数据的方法
-//     handleCaptcha();
-//   }, 345 * 1000);
-// };
+const koiTimer = ref();
+// 验证码定时器
+const getCaptchaTimer = () => {
+  koiTimer.value = setInterval(() => {
+    // 执行刷新数据的方法
+    handleCaptcha();
+  }, 345 * 1000);
+};
 
 // 进入页面加载管理员信息
 onMounted(() => {
   // 获取验证码
   handleCaptcha();
   // 局部刷新定时器
-  // getCaptchaTimer();
+  getCaptchaTimer();
 });
 
-// onUnmounted(() => {
-//   // 清除局部刷新定时器
-//   clearInterval(koiTimer.value);
-//   koiTimer.value = null;
-// });
+onUnmounted(() => {
+  // 清除局部刷新定时器
+  clearInterval(koiTimer.value);
+  koiTimer.value = null;
+});
 
 /** 登录 */
 const handleKoiLogin = () => {
@@ -213,9 +213,13 @@ const handleKoiLogin = () => {
       loading.value = true;
       try {
         // 1、执行登录接口
-        // const res: any = await koiLogin({ loginName, password, codeKey, securityCode });
-        // userStore.setToken(res.data.tokenValue);
-        userStore.setToken(authLogin.data.tokenValue);
+        const res: any = await koiLogin({ 
+          username: loginName, 
+          password: password, 
+          code: securityCode, 
+          uuid: codeKey 
+        });
+        userStore.setToken(res.data.token);
         // 2、添加动态路由 AND 用户按钮 AND 角色信息 AND 用户个人信息
         if (userStore?.token) {
           await initDynamicRouter();

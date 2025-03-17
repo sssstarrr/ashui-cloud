@@ -7,7 +7,7 @@
           <el-input
             placeholder="请输入用户名称"
             v-model="searchParams.loginName"
-            style="width: 200px"
+            style="width: 150px"
             clearable
             @keyup.enter.native="handleListPage"
           ></el-input>
@@ -16,7 +16,7 @@
           <el-input
             placeholder="请输入IP地址"
             v-model="searchParams.ipAddress"
-            style="width: 200px"
+            style="width: 150px"
             clearable
             @keyup.enter.native="handleListPage"
           ></el-input>
@@ -25,7 +25,7 @@
           <el-select
             placeholder="请选择日志状态"
             v-model="searchParams.loginStatus"
-            style="width: 200px"
+            style="width: 150px"
             clearable
             @keyup.enter.native="handleListPage"
           >

@@ -36,9 +36,13 @@ class Yu {
       config => {
         // 获取token
         const token = getToken();
+        console.log("发送请求前Token值:", token);
         // 如果实现挤下线功能，需要用户绑定一个uuid，uuid发生变化，后端将数据进行处理[直接使用Sa-Token框架也阔以]
         if (token) {
-          config.headers!["Authorization"] = "Bearer " + token;
+          // 尝试不同的方式添加token，增加兼容性
+          config.headers!["Authorization"] = token; // 不使用Bearer前缀
+          // 同时为了兼容性，也添加token header
+          config.headers!["token"] = token;
         }
         return config;
       },
@@ -168,7 +172,9 @@ class Yu {
       params,
       headers: {
         Accept: "application/vnd.ms-excel",
-        Authorization: "Bearer " + getToken()
+        // 这里也需要修改，保持与请求拦截器一致的格式
+        Authorization: getToken(), // 移除Bearer前缀
+        token: getToken() // 额外添加token头
       },
       responseType: "blob"
     });
@@ -177,7 +183,9 @@ class Yu {
   download<T = Result>(url: string, data?: object): Promise<T> {
     return axios.post(import.meta.env.VITE_SERVER + url, data, {
       headers: {
-        Authorization: "Bearer " + getToken()
+        // 这里也需要修改，保持与请求拦截器一致的格式
+        Authorization: getToken(), // 移除Bearer前缀
+        token: getToken() // 额外添加token头
       },
       responseType: 'blob'
     });

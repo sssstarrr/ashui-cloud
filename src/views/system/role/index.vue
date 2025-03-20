@@ -8,7 +8,7 @@
             placeholder="请输入角色名称"
             v-model="searchParams.roleName"
             clearable
-            style="width: 240px"
+            style="width: 200px"
             @keyup.enter.native="handleListPage"
           ></el-input>
         </el-form-item>
@@ -17,7 +17,7 @@
             placeholder="请选择角色状态"
             v-model="searchParams.roleStatus"
             clearable
-            style="width: 240px"
+            style="width: 200px"
             @keyup.enter.native="handleListPage"
           >
             <el-option label="启用" value="0" />
@@ -29,7 +29,7 @@
             placeholder="请输入角色编号"
             v-model="searchParams.roleCode"
             clearable
-            style="width: 240px"
+            style="width: 200px"
             @keyup.enter.native="handleListPage"
           ></el-input>
         </el-form-item>
@@ -49,12 +49,12 @@
         <el-col :span="1.5" v-auth="['system:role:delete']">
           <el-button type="danger" icon="delete" plain @click="handleBatchDelete()" :disabled="multiple">删除</el-button>
         </el-col>
-        <el-col :span="1.5" v-auth="['system:role:export']">
+        <!-- <el-col :span="1.5" v-auth="['system:role:export']">
           <el-button type="warning" icon="download" plain>导出</el-button>
         </el-col>
         <el-col :span="1.5" v-auth="['system:role:import']">
           <el-button type="info" icon="upload" plain>导入</el-button>
-        </el-col>
+        </el-col> -->
         <el-col :span="1.5" v-auth="['system:role:import']">
           <el-button type="success" icon="Postcard" plain :disabled="single" @click="handleAssignMenu()">分配菜单</el-button>
         </el-col>
@@ -74,11 +74,11 @@
         @selection-change="handleSelectionChange"
       >
         <el-table-column type="selection" width="55" align="center" />
-        <el-table-column label="序号" prop="roleId" width="120px" align="center" type="index"></el-table-column>
+        <el-table-column label="序号" prop="roleId" width="70px" align="center" type="index"></el-table-column>
         <el-table-column
           label="角色名称"
           prop="roleName"
-          width="120px"
+          width="150px"
           :show-overflow-tooltip="true"
           align="center"
         ></el-table-column>
@@ -108,7 +108,7 @@
           align="center"
         ></el-table-column>
         <el-table-column label="创建时间" prop="createTime" width="180px" align="center"></el-table-column>
-        <el-table-column label="操作" align="center" width="150" fixed="right">
+        <el-table-column label="操作" align="center" width="200" fixed="right">
           <template #default="{ row }">
             <el-tooltip content="修改🌻" placement="top">
               <el-button

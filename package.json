@@ -1,12 +1,12 @@
 {
-  "name": "koi-ui",
+  "name": "ashui-cloud",
   "private": true,
   "version": "1.0.0",
   "type": "module",
   "author": {
-    "name": "YuXin",
-    "email": "1736306607@qq.com",
-    "url": "https://gitee.com/KoiKite/koi-ui"
+    "name": "三水番",
+    "email": "1164442816@qq.com",
+    "url": "https://gitee.com/sssstarrr/ashui-cloud"
   },
   "scripts": {
     "dev": "vite",

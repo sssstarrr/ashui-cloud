@@ -34,9 +34,9 @@
     <div class="h-20px"></div>
     <div class="w-200px flex flex-justify-between">
       <!-- 导出按钮 -->
-      <el-button type="primary" icon="Download" plain @click="handleDownload">导出</el-button>
+      <!-- <el-button type="primary" icon="Download" plain @click="handleDownload">导出</el-button> -->
       <!-- 导入组件 -->
-      <el-button type="info" icon="Upload" plain @click="handleImportExcel">导入</el-button>
+      <!-- <el-button type="info" icon="Upload" plain @click="handleImportExcel">导入</el-button> -->
       <KoiExcel ref="koiExcelRef" @handleTemplateExcel="handleTemplateExcel"></KoiExcel>
     </div>
     <div class="h-20px"></div>
@@ -84,14 +84,14 @@ const handleTemplateExcel = () => {
 };
 
 /** 导入 */
-const handleImportExcel = () => {
-  let params = {
-    title: "导入数据",
-    templeApi: import.meta.env.VITE_SERVER + "/excelTemplate",
-    importApi: "/excelImport"
-  };
-  koiExcelRef.value.excelParams(params);
-};
+// const handleImportExcel = () => {
+//   let params = {
+//     title: "导入数据",
+//     templeApi: import.meta.env.VITE_SERVER + "/excelTemplate",
+//     importApi: "/excelImport"
+//   };
+//   koiExcelRef.value.excelParams(params);
+// };
 </script>
 
 <style scoped></style>

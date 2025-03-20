@@ -104,7 +104,7 @@
         <el-table-column label="创建时间" prop="createTime" width="180px" align="center"></el-table-column>
         <el-table-column label="修改时间" prop="updateTime" width="180px" align="center"></el-table-column>
         <el-table-column label="修改人" prop="updateBy" width="180px" align="center"></el-table-column>
-        <el-table-column label="操作" align="center" width="120" fixed="right">
+        <el-table-column label="操作" align="center" width="130" fixed="right">
           <template #default="{ row }">
             <el-tooltip content="修改🌻" placement="top">
               <el-button

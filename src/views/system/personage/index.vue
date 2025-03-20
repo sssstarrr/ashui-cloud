@@ -5,7 +5,7 @@
         <el-card>
           <div class="text-13px text-#303133 dark:text-#E5EAF3">
             <div class="flex flex-justify-center">
-              <KoiUploadImage v-model:imageUrl="mine.avatar">
+              <KoiUploadImage v-model:imageUrl="mine.avatar" @update:imageUrl="handleAvatarUpload">
                 <template #content>
                   <el-icon><Avatar /></el-icon>
                   <span>请上传头像</span>
@@ -65,7 +65,12 @@
                 <el-row>
                   <el-col :sm="{ span: 24 }" :xs="{ span: 24 }">
                     <el-form-item label="登录名称" prop="loginName">
-                      <el-input v-model="mineForm.loginName" placeholder="请输入登录名称" clearable />
+                      <el-input v-model="mineForm.loginName" placeholder="请输入登录名称" clearable disabled />
+                    </el-form-item>
+                  </el-col>
+                  <el-col :sm="{ span: 24 }" :xs="{ span: 24 }">
+                    <el-form-item label="用户昵称" prop="nickname">
+                      <el-input v-model="mineForm.nickname" placeholder="请输入用户昵称" clearable />
                     </el-form-item>
                   </el-col>
                   <el-col :sm="{ span: 24 }" :xs="{ span: 24 }">
@@ -81,9 +86,9 @@
                   <el-col :sm="{ span: 24 }" :xs="{ span: 24 }">
                     <el-form-item label="性别" prop="sex">
                       <el-radio-group v-model="mineForm.sex" placeholder="请选择性别">
-                        <el-radio value="1" border>男</el-radio>
-                        <el-radio value="2" border>女</el-radio>
-                        <el-radio value="3" border>未知</el-radio>
+                        <el-radio value="0" border>男</el-radio>
+                        <el-radio value="1" border>女</el-radio>
+                        <el-radio value="2" border>未知</el-radio>
                       </el-radio-group>
                     </el-form-item>
                   </el-col>
@@ -95,14 +100,13 @@
                   </el-col>
                 </el-row>
               </el-form>
-              {{ mineForm }}
             </el-tab-pane>
             <el-tab-pane label="修改密码" name="second">
               <el-form ref="pwdFormRef" :rules="pwdRules" :model="pwdForm" label-width="80px" status-icon>
                 <el-row>
                   <el-col :sm="{ span: 24 }" :xs="{ span: 24 }">
-                    <el-form-item label="密码" prop="password">
-                      <el-input v-model="pwdForm.password" placeholder="请输入旧密码" show-password clearable />
+                    <el-form-item label="旧密码" prop="oldPassword">
+                      <el-input v-model="pwdForm.oldPassword" placeholder="请输入旧密码" show-password clearable />
                     </el-form-item>
                   </el-col>
                   <el-col :sm="{ span: 24 }" :xs="{ span: 24 }">
@@ -123,7 +127,6 @@
                   </el-col>
                 </el-row>
               </el-form>
-              {{ pwdForm }}
             </el-tab-pane>
           </el-tabs>
         </el-card>
@@ -133,22 +136,66 @@
 </template>
 
 <script setup lang="ts" name="personagePage">
-import { nextTick, ref, reactive } from "vue";
+import { nextTick, ref, reactive, onMounted } from "vue";
 import { koiMsgError, koiMsgSuccess } from "@/utils/koi.ts";
+// 导入API
+import { getProfile, updateProfile, updatePassword, uploadAvatar } from "@/api/system/user/index.ts";
+import type { IProfileUpdateParams, IPasswordUpdateParams } from "@/api/system/user/type.ts";
+import { koiSessionStorage, koiLocalStorage } from "@/utils/storage.ts";
+import { LOGIN_URL } from "@/config/index.ts";
 
 // 个人信息
 const mine = ref({
-  avatar: "https://pic4.zhimg.com/v2-702a23ebb518199355099df77a3cfe07_b.webp",
-  loginName: "YU-ADMIN🌻",
-  userName: "于金金",
-  phone: "18593114301",
-  email: "yuxintao6@163.com",
-  roleName: "超级管理员",
-  createTime: "2023-11-23 18:00:00"
+  avatar: "",
+  loginName: "",
+  userName: "",
+  phone: "",
+  email: "",
+  roleName: "",
+  createTime: ""
 });
 
 // el-card标签选择name
 const activeName = ref("first");
+
+// 获取个人信息
+const fetchProfileInfo = async () => {
+  try {
+    const res = await getProfile();
+    if (res.code === 200) {
+      const data = res.data;
+      // 映射后端数据到前端显示格式
+      mine.value = {
+        avatar: data.avatar || "",
+        loginName: data.username,
+        userName: data.nickname,
+        phone: data.mobile,
+        email: data.email,
+        roleName: data.roles && data.roles.length > 0 ? data.roles[0].roleName : "",
+        createTime: data.createTime
+      };
+      
+      // 同时填充表单数据
+      mineForm.value = {
+        loginName: data.username,
+        nickname: data.nickname,
+        phone: data.mobile,
+        email: data.email,
+        sex: data.gender
+      };
+    } else {
+      koiMsgError("获取个人信息失败：" + res.msg);
+    }
+  } catch (error) {
+    console.error("获取个人信息出错", error);
+    koiMsgError("获取个人信息出错，请稍后重试");
+  }
+};
+
+// 页面加载时获取数据
+onMounted(() => {
+  fetchProfileInfo();
+});
 
 /** 基本资料 Begin  */
 
@@ -157,30 +204,23 @@ const mineFormRef = ref<any>();
 // form表单
 let mineForm = ref<any>({
   loginName: "",
+  nickname: "",
   phone: "",
   email: "",
-  sex: "3"
+  sex: "2"
 });
 /** 清空表单数据 */
 const resetMineForm = () => {
-  // 等待 DOM 更新完成
-  nextTick(() => {
-    if (mineFormRef.value) {
-      // 重置该表单项，将其值重置为初始值，并移除校验结果
-      mineFormRef.value.resetFields();
-    }
-  });     
-  mineForm.value = {
-    loginName: "",
-    phone: "",
-    email: "",
-    sex: "3"
-  };
+  // 重新获取个人信息
+  fetchProfileInfo();
 };
 /** 表单规则 */
 const mineRules = reactive({
   loginName: [{ required: true, message: "请输入登录名称", trigger: "blur" }],
-  phone: [{ required: true, message: "请输入手机号码", trigger: "blur" }]
+  nickname: [{ required: true, message: "请输入用户昵称", trigger: "blur" }],
+  phone: [{ required: true, message: "请输入手机号码", trigger: "blur" }],
+  email: [{ required: true, message: "请输入邮箱", trigger: "blur" }],
+  sex: [{ required: true, message: "请选择性别", trigger: "change" }]
 });
 
 /** 保存 */
@@ -188,9 +228,29 @@ const handleMineSave = () => {
   if (!mineFormRef.value) return;
   (mineFormRef.value as any).validate(async (valid: any) => {
     if (valid) {
-      koiMsgSuccess("保存成功🌻");
+      try {
+        // 映射前端字段到后端字段
+        const params: IProfileUpdateParams = {
+          nickname: mineForm.value.nickname,
+          email: mineForm.value.email,
+          mobile: mineForm.value.phone,
+          gender: mineForm.value.sex
+        };
+        
+        const res = await updateProfile(params);
+        if (res.code === 200) {
+          koiMsgSuccess(res.msg || "保存成功");
+          // 更新成功后重新获取个人信息
+          fetchProfileInfo();
+        } else {
+          koiMsgError(res.msg || "保存失败");
+        }
+      } catch (error) {
+        console.error("更新个人信息出错", error);
+        koiMsgError("更新个人信息出错，请稍后重试");
+      }
     } else {
-      koiMsgError("验证失败，请检查填写内容🌻");
+      koiMsgError("验证失败，请检查填写内容");
     }
   });
 };
@@ -202,7 +262,7 @@ const handleMineSave = () => {
 const pwdFormRef = ref<any>();
 // form表单
 let pwdForm = ref<any>({
-  password: "",
+  oldPassword: "",
   newPassword: "",
   confirmPassword: ""
 });
@@ -217,7 +277,7 @@ const resetPwdForm = () => {
     }
   });    
   pwdForm.value = {
-    password: "",
+    oldPassword: "",
     newPassword: "",
     confirmPassword: ""
   };
@@ -225,24 +285,110 @@ const resetPwdForm = () => {
 
 /** 表单规则 */
 const pwdRules = reactive({
-  password: [{ required: true, message: "请输入旧密码", trigger: "change" }],
-  newPassword: [{ required: true, message: "请输入新密码", trigger: "change" }],
-  confirmPassword: [{ required: true, message: "请输入确认密码", trigger: "change" }]
+  oldPassword: [{ required: true, message: "请输入旧密码", trigger: "change" }],
+  newPassword: [
+    { required: true, message: "请输入新密码", trigger: "change" },
+    { min: 8, message: "密码长度至少8位", trigger: "change" },
+    { 
+      pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[\s\S]{8,}$/,
+      message: "密码必须包含大小写字母和数字",
+      trigger: "change"
+    }
+  ],
+  confirmPassword: [
+    { required: true, message: "请输入确认密码", trigger: "change" },
+    { 
+      validator: (_: any, value: string, callback: any) => {
+        if (value !== pwdForm.value.newPassword) {
+          callback(new Error("两次输入的密码不一致"));
+        } else {
+          callback();
+        }
+      },
+      trigger: "change"
+    }
+  ]
 });
 
-/** 保存 */
+/** 保存密码 */
 const handlePwdSave = () => {
   if (!pwdFormRef.value) return;
   (pwdFormRef.value as any).validate(async (valid: any) => {
     if (valid) {
-      koiMsgSuccess("保存成功🌻");
+      try {
+        const params: IPasswordUpdateParams = {
+          oldPassword: pwdForm.value.oldPassword,
+          newPassword: pwdForm.value.newPassword,
+          confirmPassword: pwdForm.value.confirmPassword
+        };
+        
+        const res = await updatePassword(params);
+        if (res.code === 200) {
+          koiMsgSuccess(res.msg || "密码修改成功，即将跳转到登录页面");
+          // 清空表单
+          resetPwdForm();
+          
+          // 密码修改成功后，清除登录信息并跳转到登录页
+          setTimeout(() => {
+            // 清除用户会话和本地存储
+            koiSessionStorage.clear();
+            koiLocalStorage.remove("user");
+            koiLocalStorage.remove("keepAlive");
+            koiLocalStorage.remove("tabs");
+            // 跳转到登录页
+            window.location.replace(LOGIN_URL);
+          }, 1500);
+        } else {
+          koiMsgError(res.msg || "密码修改失败");
+        }
+      } catch (error) {
+        console.error("修改密码出错", error);
+        koiMsgError("修改密码出错，请稍后重试");
+      }
     } else {
-      koiMsgError("验证失败，请检查填写内容🌻");
+      koiMsgError("验证失败，请检查填写内容");
     }
   });
 };
 
 /** 修改密码 End  */
+
+/** 上传头像 Begin */
+const handleAvatarUpload = async (file: File | string) => {
+  // 如果是字符串(URL)，直接返回
+  if (typeof file === 'string' || !file) return;
+  
+  // 检查文件类型和大小
+  const isImage = file.type.startsWith('image/');
+  const isLt3M = file.size / 1024 / 1024 < 3;
+
+  if (!isImage) {
+    koiMsgError("只能上传图片文件！");
+    return;
+  }
+  if (!isLt3M) {
+    koiMsgError("图片大小不能超过 3MB！");
+    return;
+  }
+
+  try {
+    const res = await uploadAvatar(file);
+    if (res.code === 200) {
+      koiMsgSuccess(res.msg || "头像上传成功");
+      // 上传成功后更新头像URL
+      mine.value.avatar = res.data.url;
+      // 重新获取个人信息
+      fetchProfileInfo();
+    } else {
+      console.error("头像上传失败", res);
+      koiMsgError(res.msg || "头像上传失败");
+    }
+  } catch (error) {
+    console.error("上传头像出错", error);
+    koiMsgError("上传头像出错，请稍后重试");
+  }
+};
+/** 上传头像 End */
 </script>
 
 <style lang="scss" scoped>

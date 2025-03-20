@@ -7,7 +7,7 @@
           <el-input
             placeholder="请输入操作名称"
             v-model="searchParams.operName"
-            style="width: 200px"
+            style="width: 150px"
             clearable
             @keyup.enter.native="handleListPage"
           ></el-input>
@@ -16,7 +16,7 @@
           <el-input
             placeholder="请输入IP地址"
             v-model="searchParams.operIp"
-            style="width: 200px"
+            style="width: 150px"
             clearable
             @keyup.enter.native="handleListPage"
           ></el-input>
@@ -25,7 +25,7 @@
           <el-input
             placeholder="请输入操作人员名字"
             v-model="searchParams.operMan"
-            style="width: 200px"
+            style="width: 150px"
             clearable
             @keyup.enter.native="handleListPage"
           ></el-input>

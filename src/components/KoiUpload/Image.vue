@@ -74,7 +74,7 @@ interface IUploadImageProps {
 // 接收父组件参数
 const props = withDefaults(defineProps<IUploadImageProps>(), {
   imageUrl: "",
-  action: "/koi/file/uploadFile",
+  action: "/api/system/user/profile/avatar",
   drag: true,
   disabled: false,
   fileSize: 3,
@@ -116,17 +116,45 @@ const handleHttpUpload = async (options: UploadRequestOptions) => {
     background: "rgba(0,0,0,.2)"
   });
   try {
-    if (props.fileParam == "-1" || props.fileParam == "") {
-      props.fileParam === "-1";
+    const res: any = await koi.upload(props.action, formData);
+    if (res.code === 200) {
+      emit("update:imageUrl", res.data.url);
+      loadingInstance.close();
+      // 调用 el-form 内部的校验方法[可自动校验]
+      formItemContext?.prop && formContext?.validateField([formItemContext.prop as string]);
+      ElNotification({
+        title: "上传成功",
+        message: "头像上传成功",
+        type: "success"
+      });
+      options.onSuccess(res);
+    } else {
+      loadingInstance.close();
+      ElNotification({
+        title: "上传失败",
+        message: res.msg || "上传失败，请重试",
+        type: "error"
+      });
+      // 修复 TS 类型错误
+      const error = new Error(res.msg || "上传失败") as any;
+      error.status = res.code;
+      error.method = 'POST';
+      error.url = props.action;
+      options.onError(error);
     }
-    const res: any = await koi.upload(props.action + "/" + props.fileSize + "/" + props.folderName + "/" + props.fileParam, formData);
-    emit("update:imageUrl", import.meta.env.VITE_SERVER + res.data.fileUploadPath);
+  } catch (error: any) {
     loadingInstance.close();
-    // 调用 el-form 内部的校验方法[可自动校验]
-    formItemContext?.prop && formContext?.validateField([formItemContext.prop as string]);
-  } catch (error) {
-    loadingInstance.close();
-    options.onError(error as any);
+    ElNotification({
+      title: "上传失败",
+      message: error.message || "上传过程中发生错误，请重试",
+      type: "error"
+    });
+    // 修复 TS 类型错误
+    const uploadError = new Error(error.message || "上传失败") as any;
+    uploadError.status = error.status || 500;
+    uploadError.method = 'POST';
+    uploadError.url = props.action;
+    options.onError(uploadError);
   }
 };
 
@@ -167,20 +195,12 @@ const beforeUpload: UploadProps["beforeUpload"] = rawFile => {
 
 /** 图片上传成功 */
 const uploadSuccess = () => {
-  ElNotification({
-    title: "温馨提示",
-    message: "图片上传成功！",
-    type: "success"
-  });
+  // 移除这里的提示，因为在handleHttpUpload中已经有了提示
 };
 
 /** 图片上传错误 */
 const uploadError = () => {
-  ElNotification({
-    title: "温馨提示",
-    message: "图片上传失败，请您重新上传！",
-    type: "error"
-  });
+  // 移除这里的提示，因为在handleHttpUpload中已经有了提示
 };
 </script>
 

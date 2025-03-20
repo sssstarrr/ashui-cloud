@@ -30,7 +30,7 @@
             @keyup.enter.native="handleListPage"
           ></el-input>
         </el-form-item>
-        <el-form-item label="登录时间" prop="loginTime">
+        <!-- <el-form-item label="登录时间" prop="loginTime">
           <el-date-picker
             v-model="dateRange"
             type="datetimerange"
@@ -40,7 +40,7 @@
             end-placeholder="结束日期"
             :default-time="[new Date(2000, 1, 1, 0, 0, 0), new Date(2000, 1, 1, 23, 59, 59)]"
           />
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item>
           <el-button type="primary" icon="search" plain v-debounce="handleSearch">搜索</el-button>
           <el-button type="danger" icon="refresh" plain v-throttle="resetSearch">重置</el-button>
@@ -61,12 +61,12 @@
         <el-col :span="1.5" v-auth="['system:role:update']">
           <el-button type="primary" icon="edit" plain @click="handleAssignRoles()" :disabled="single">分配角色</el-button>
         </el-col>
-        <el-col :span="1.5" v-auth="['system:role:export']">
+        <!-- <el-col :span="1.5" v-auth="['system:role:export']">
           <el-button type="warning" icon="download" plain>导出</el-button>
         </el-col>
         <el-col :span="1.5" v-auth="['system:role:import']">
           <el-button type="info" icon="upload" plain>导入</el-button>
-        </el-col>
+        </el-col> -->
         <KoiToolbar v-model:showSearch="showSearch" @refreshTable="handleListPage"></KoiToolbar>
       </el-row>
 

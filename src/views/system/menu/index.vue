@@ -8,7 +8,7 @@
             placeholder="请输入菜单名称"
             v-model="searchParams.menuName"
             clearable
-            style="width: 240px"
+            style="width: 200px"
             @keyup.enter.native="handleTreeList"
           ></el-input>
         </el-form-item>
@@ -17,7 +17,7 @@
             placeholder="请选择菜单状态"
             v-model="searchParams.menuStatus"
             clearable
-            style="width: 240px"
+            style="width: 200px"
             @keyup.enter.native="handleTreeList"
           >
             <el-option label="启用" value="0" />
@@ -29,7 +29,7 @@
             placeholder="请输入权限标识"
             v-model="searchParams.auth"
             clearable
-            style="width: 240px"
+            style="width: 200px"
             @keyup.enter.native="handleTreeList"
           ></el-input>
         </el-form-item>
@@ -152,7 +152,7 @@
         <el-table-column label="路由path" prop="path" width="180px" align="center" :show-overflow-tooltip="true">
         </el-table-column>
         <el-table-column label="显示顺序" prop="sorted" width="90px" align="center"></el-table-column>
-        <el-table-column label="操作" align="center" width="120" fixed="right">
+        <el-table-column label="操作" align="center" width="130" fixed="right">
           <template #default="{ row }">
             <el-tooltip content="修改🌻" placement="top">
               <el-button

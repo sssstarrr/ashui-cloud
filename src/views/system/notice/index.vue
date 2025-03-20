@@ -52,9 +52,9 @@
         <el-col :span="1.5" v-auth="['system:role:delete']">
           <el-button type="danger" icon="delete" plain @click="handleBatchDelete()" :disabled="multiple">删除</el-button>
         </el-col>
-        <el-col :span="1.5" v-auth="['system:role:export']">
+        <!-- <el-col :span="1.5" v-auth="['system:role:export']">
           <el-button type="warning" icon="download" plain>导出</el-button>
-        </el-col>
+        </el-col> -->
         <KoiToolbar v-model:showSearch="showSearch" @refreshTable="handleListPage"></KoiToolbar>
       </el-row>
 

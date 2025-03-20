@@ -1,7 +1,14 @@
 // 导入二次封装axios
 import koi from "@/utils/axios.ts";
 // 引入接口类型
-import type { ILoginParams } from "./type.ts";
+import type { 
+  ILoginParams, 
+  IProfileInfo,
+  IProfileUpdateParams,
+  IPasswordUpdateParams,
+  IUploadAvatarResult,
+  IResponse
+} from "./type.ts";
 
 // 统一管理接口
 enum API {
@@ -14,7 +21,12 @@ enum API {
   ADD = "/koi/sysLoginUser/add",
   DELETE = "/koi/sysLoginUser/deleteById",
   BATCH_DELETE = "/koi/sysLoginUser/batchDelete",
-  UPDATE_STATUS = "/koi/sysLoginUser/updateStatus"
+  UPDATE_STATUS = "/koi/sysLoginUser/updateStatus",
+  // 个人中心相关接口
+  PROFILE_GET = "/api/system/user/profile",
+  PROFILE_UPDATE = "/api/system/user/profile",
+  PROFILE_UPDATE_PWD = "/api/system/user/profile/updatePwd",
+  PROFILE_UPLOAD_AVATAR = "/api/system/user/profile/avatar"
 }
 // 暴露请求函数
 // 登录接口方法
@@ -71,4 +83,43 @@ export const batchDelete = (ids: any) => {
 // 修改状态
 export const updateStatus = (id: any, status: any) => {
   return koi.post(API.UPDATE_STATUS + "/" + id + "/" + status); // 第一种传参方式
+};
+
+// 个人中心相关接口
+
+/**
+ * 获取个人信息
+ * @returns Promise<IResponse<IProfileInfo>>
+ */
+export const getProfile = () => {
+  return koi.get<IResponse<IProfileInfo>>(API.PROFILE_GET);
+};
+
+/**
+ * 更新个人信息
+ * @param data 个人信息更新参数
+ * @returns Promise<IResponse>
+ */
+export const updateProfile = (data: IProfileUpdateParams) => {
+  return koi.put<IResponse>(API.PROFILE_UPDATE, data);
+};
+
+/**
+ * 修改密码
+ * @param data 密码更新参数
+ * @returns Promise<IResponse>
+ */
+export const updatePassword = (data: IPasswordUpdateParams) => {
+  return koi.put<IResponse>(API.PROFILE_UPDATE_PWD, data);
+};
+
+/**
+ * 上传头像
+ * @param file 头像文件
+ * @returns Promise<IResponse<IUploadAvatarResult>>
+ */
+export const uploadAvatar = (file: File) => {
+  const formData = new FormData();
+  formData.append('file', file);
+  return koi.upload<IResponse<IUploadAvatarResult>>(API.PROFILE_UPLOAD_AVATAR, formData);
 };

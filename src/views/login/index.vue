@@ -139,8 +139,8 @@ interface ILoginUser {
 
 const loginForm = reactive<ILoginUser>({
   loginName: "admin",
-  password: "admin123",
-  securityCode: "",
+  password: "Px123456",
+  securityCode: "1234",
   codeKey: "",
   captchaPicture: ""
 });

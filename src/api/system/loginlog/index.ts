@@ -3,14 +3,14 @@ import koi from "@/utils/axios.ts";
 
 // 统一管理接口
 enum API {
-  LIST_PAGE = "/api/system/loginlog/list",
+  LIST_PAGE = "/system/loginlog/list",
   GET_BY_ID = "/koi/sysLoginLog/getById",
   UPDATE = "/koi/sysLoginLog/update",
   ADD = "/koi/sysLoginLog/add",
-  DELETE = "/api/system/loginlog",
-  BATCH_DELETE = "/api/system/loginlog/batch",
+  DELETE = "/system/loginlog",
+  BATCH_DELETE = "/system/loginlog/batch",
   UPDATE_STATUS = "/koi/sysLoginLog/updateStatus",
-  CLEAN = "/api/system/loginlog/clean"
+  CLEAN = "/system/loginlog/clean"
 }
 
 // 多条件分页查询数据

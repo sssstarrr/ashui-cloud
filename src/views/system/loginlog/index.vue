@@ -143,7 +143,11 @@
             </el-switch>
           </template>
         </el-table-column> -->
-        <el-table-column label="登录时间" prop="loginTime" width="180px" align="center"></el-table-column>
+        <el-table-column label="登录时间" prop="loginTime" width="180px" align="center">
+          <template #default="scope">
+            {{ formatDateTime(scope.row.loginTime) }}
+          </template>
+        </el-table-column>
         <el-table-column label="操作" align="center" width="120" fixed="right">
           <template #default="{ row }">
             <el-tooltip content="删除🌻" placement="top">
@@ -191,6 +195,21 @@ import {
   batchDelete,
   cleanLoginLog
 } from "@/api/system/loginlog/index.ts";
+
+// 格式化日期时间显示
+const formatDateTime = (dateTimeString: string) => {
+  if (!dateTimeString) return "";
+  // 处理ISO格式的日期字符串
+  const date = new Date(dateTimeString);
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  const hours = String(date.getHours()).padStart(2, '0');
+  const minutes = String(date.getMinutes()).padStart(2, '0');
+  const seconds = String(date.getSeconds()).padStart(2, '0');
+  
+  return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+};
 
 // 表格加载动画Loading
 const loading = ref(false);

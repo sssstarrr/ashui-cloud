@@ -23,10 +23,10 @@ enum API {
   BATCH_DELETE = "/koi/sysLoginUser/batchDelete",
   UPDATE_STATUS = "/koi/sysLoginUser/updateStatus",
   // 个人中心相关接口
-  PROFILE_GET = "/api/system/user/profile",
-  PROFILE_UPDATE = "/api/system/user/profile",
-  PROFILE_UPDATE_PWD = "/api/system/user/profile/updatePwd",
-  PROFILE_UPLOAD_AVATAR = "/api/system/user/profile/avatar"
+  PROFILE_GET = "/system/user/profile",
+  PROFILE_UPDATE = "/system/user/profile",
+  PROFILE_UPDATE_PWD = "/system/user/profile/updatePwd",
+  PROFILE_UPLOAD_AVATAR = "/system/user/profile/avatar"
 }
 // 暴露请求函数
 // 登录接口方法

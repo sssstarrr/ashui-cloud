@@ -3,8 +3,8 @@ import koi from "@/utils/axios.ts";
 
 // 统一管理接口
 enum API {
-  KOI_LOGIN = "/api/auth/login",
-  GET_CAPTCHA = "/api/auth/captcha"
+  KOI_LOGIN = "/auth/login",
+  GET_CAPTCHA = "/auth/captcha"
 }
 
 // 登录接口方法

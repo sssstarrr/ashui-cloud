@@ -3,28 +3,28 @@
     <KoiCard>
       <!-- 搜索条件 -->
       <el-form v-show="showSearch" :inline="true">
-        <el-form-item label="登录账号" prop="loginName">
+        <el-form-item label="登录账号" prop="username">
           <el-input
             placeholder="请输入登录账号"
-            v-model="searchParams.loginName"
+            v-model="searchParams.username"
             clearable
             style="width: 200px"
             @keyup.enter.native="handleListPage"
           ></el-input>
         </el-form-item>
-        <el-form-item label="用户名称" prop="userName">
+        <el-form-item label="用户名称" prop="nickname">
           <el-input
             placeholder="请输入用户名称"
-            v-model="searchParams.userName"
+            v-model="searchParams.nickname"
             clearable
             style="width: 200px"
             @keyup.enter.native="handleListPage"
           ></el-input>
         </el-form-item>
-        <el-form-item label="手机号" prop="phone">
+        <el-form-item label="手机号" prop="mobile">
           <el-input
             placeholder="请输入手机号"
-            v-model="searchParams.phone"
+            v-model="searchParams.mobile"
             clearable
             style="width: 200px"
             @keyup.enter.native="handleListPage"
@@ -75,12 +75,16 @@
       <el-table
         v-loading="loading"
         border
-        :data="tableList.slice((searchParams.pageNo - 1) * searchParams.pageSize, searchParams.pageNo * searchParams.pageSize)"
+        :data="tableList"
         empty-text="暂时没有数据哟🌻"
         @selection-change="handleSelectionChange"
       >
         <el-table-column type="selection" width="55" align="center" />
-        <el-table-column label="序号" prop="userId" width="50px" align="center" type="index"></el-table-column>
+        <el-table-column label="序号" prop="userId" width="50px" align="center">
+          <template #default="scope">
+            {{ scope.row.userId }}
+          </template>
+        </el-table-column>
         <el-table-column
           label="登录账号"
           prop="loginName"
@@ -145,7 +149,11 @@
             </el-switch>
           </template>
         </el-table-column>
-        <el-table-column label="创建时间" prop="createTime" width="180px" align="center"></el-table-column>
+        <el-table-column label="创建时间" prop="createTime" width="180px" align="center">
+          <template #default="scope">
+            {{ formatDate(scope.row.createTime) }}
+          </template>
+        </el-table-column>
         <el-table-column label="备注" prop="remark" width="200px" align="center" :show-overflow-tooltip="true"></el-table-column>
         <el-table-column
           label="操作"
@@ -205,8 +213,18 @@
           <el-form ref="formRef" :rules="rules" :model="form" label-width="80px" status-icon>
             <el-row>
               <el-col :sm="{ span: 24 }" :xs="{ span: 24 }">
+                <el-form-item label="登录账号" prop="username">
+                  <el-input v-model="form.username" placeholder="请输入登录账号" clearable />
+                </el-form-item>
+              </el-col>
+              <el-col :sm="{ span: 24 }" :xs="{ span: 24 }">
                 <el-form-item label="用户名称" prop="userTitle">
                   <el-input v-model="form.userTitle" placeholder="请输入用户名称" clearable />
+                </el-form-item>
+              </el-col>
+              <el-col :sm="{ span: 24 }" :xs="{ span: 24 }">
+                <el-form-item label="密码" prop="password">
+                  <el-input v-model="form.password" placeholder="请输入密码" type="password" show-password clearable />
                 </el-form-item>
               </el-col>
               <el-col :sm="{ span: 24 }" :xs="{ span: 24 }">
@@ -303,217 +321,22 @@ import { listNormalRole, assignUserRole } from "@/api/system/role/index.ts";
 // @ts-ignore
 import { listDataByType } from "@/api/system/dict/data/index.ts";
 import { koiDatePicker } from "@/utils/index.ts";
+import type { IUserAddParams, IUserUpdateParams } from "@/api/system/user/type.ts";
 
 // 表格加载动画Loading
 const loading = ref(false);
 // 是否显示搜索表单[默认显示]
 const showSearch = ref<boolean>(true); // 默认显示搜索条件
 // 表格数据
-const tableList = ref<any>([
-  {
-    userId: 1,
-    loginName: "YU-ADMIN",
-    userName: "超级管理员",
-    userType: "1",
-    email: "YU-ADMIN666@163.com",
-    phone: "18888888888",
-    sex: "1",
-    avatar: "https://pic4.zhimg.com/v2-702a23ebb518199355099df77a3cfe07_b.webp",
-    userStatus: "0",
-    remark: "管理员",
-    createTime: "2023-08-06 04:00:00"
-  },
-  {
-    userId: 2,
-    loginName: "KOI",
-    userName: "小锦鲤",
-    userType: "1",
-    email: "koi@qq.com",
-    phone: "18666666666",
-    sex: "1",
-    avatar: "https://pic2.zhimg.com/v2-44ce1b82f7e68de4078bf513221619e1_b.webp",
-    userStatus: "0",
-    remark: "管理员",
-    createTime: "2023-08-07 04:00:00"
-  },
-  {
-    userId: 3,
-    loginName: "YXT",
-    userName: "于金金",
-    userType: "2",
-    email: "koi@qq.com",
-    phone: "18666666666",
-    sex: "2",
-    avatar: "https://pic1.zhimg.com/v2-3cbc889feac057cc7fb85a40c82598dc_b.webp",
-    userStatus: "0",
-    remark: "管理员",
-    createTime: "2023-08-08 04:00:00"
-  },
-  {
-    userId: 4,
-    loginName: "orange",
-    userName: "迪迦",
-    userType: "1",
-    email: "YU-ADMIN666@163.com",
-    phone: "18888888888",
-    sex: "1",
-    avatar: "https://pic3.zhimg.com/v2-b6c350529f3c06c8a90d886c311f3866_b.webp",
-    userStatus: "0",
-    remark: "远古时代战士",
-    createTime: "2023-08-06 04:00:00"
-  },
-  {
-    userId: 5,
-    loginName: "apple",
-    userName: "盖亚",
-    userType: "1",
-    email: "koi@qq.com",
-    phone: "18666666666",
-    sex: "1",
-    avatar: "https://pic2.zhimg.com/v2-430e1a7dd0508a0b4b01dca9b94b22f5_b.webp",
-    userStatus: "0",
-    remark: "远古时代战士",
-    createTime: "2023-08-07 04:00:00"
-  },
-  {
-    userId: 6,
-    loginName: "banana",
-    userName: "阿古茹",
-    userType: "2",
-    email: "koi@qq.com",
-    phone: "18666666666",
-    sex: "2",
-    avatar: "https://pic3.zhimg.com/v2-6e8ff25c222b6302cb836c9f6b013e7e_b.webp",
-    userStatus: "0",
-    remark: "远古时代战士",
-    createTime: "2023-08-08 04:00:00"
-  },
-  {
-    userId: 7,
-    loginName: "pear",
-    userName: "帝骑",
-    userType: "1",
-    email: "YU-ADMIN666@163.com",
-    phone: "18888888888",
-    sex: "1",
-    avatar: "https://pic2.zhimg.com/v2-d75d120cdab34142933ad9df18508ad1_b.webp",
-    userStatus: "0",
-    remark: "假面骑士",
-    createTime: "2023-08-06 04:00:00"
-  },
-  {
-    userId: 8,
-    loginName: "pineapple",
-    userName: "创骑",
-    userType: "1",
-    email: "koi@qq.com",
-    phone: "18666666666",
-    sex: "1",
-    avatar: "https://pic3.zhimg.com/v2-a42559223697c17188a75ad3a10e1cea_b.webp",
-    userStatus: "0",
-    remark: "假面骑士",
-    createTime: "2023-08-07 04:00:00"
-  },
-  {
-    userId: 9,
-    loginName: "mango",
-    userName: "时王",
-    userType: "2",
-    email: "koi@qq.com",
-    phone: "18666666666",
-    sex: "2",
-    avatar: "https://img0.baidu.com/it/u=1752705848,3929873216&fm=253&app=138&size=w931&n=0&f=JPEG",
-    userStatus: "0",
-    remark: "假面骑士",
-    createTime: "2023-08-08 04:00:00"
-  },
-  {
-    userId: 10,
-    loginName: "plum",
-    userName: "海绵宝宝",
-    userType: "1",
-    email: "YU-ADMIN666@163.com",
-    phone: "18888888888",
-    sex: "1",
-    avatar: "https://img1.baidu.com/it/u=3941674148,2170642163&fm=253&fmt=auto&app=138&f=JPEG?w=255&h=255",
-    userStatus: "0",
-    remark: "地底世界",
-    createTime: "2023-08-06 04:00:00"
-  },
-  {
-    userId: 11,
-    loginName: "watermelon",
-    userName: "派大星",
-    userType: "1",
-    email: "koi@qq.com",
-    phone: "18666666666",
-    sex: "1",
-    avatar: "https://img2.baidu.com/it/u=1519337523,3739613381&fm=253&fmt=auto&app=120&f=JPEG?w=600&h=600",
-    userStatus: "0",
-    remark: "地底世界",
-    createTime: "2023-08-07 04:00:00"
-  },
-  {
-    userId: 12,
-    loginName: "peach",
-    userName: "章鱼哥",
-    userType: "2",
-    email: "koi@qq.com",
-    phone: "18666666666",
-    sex: "2",
-    avatar: "https://img2.baidu.com/it/u=71901679,703168528&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=500",
-    userStatus: "0",
-    remark: "地底世界",
-    createTime: "2023-08-08 04:00:00"
-  },
-  {
-    userId: 13,
-    loginName: "grape",
-    userName: "光头强",
-    userType: "1",
-    email: "YU-ADMIN666@163.com",
-    phone: "18888888888",
-    sex: "1",
-    avatar: "https://img0.baidu.com/it/u=1121602739,1172990093&fm=253&fmt=auto&app=138&f=JPEG?w=380&h=378",
-    userStatus: "0",
-    remark: "熊出没",
-    createTime: "2023-08-06 04:00:00"
-  },
-  {
-    userId: 14,
-    loginName: "Blackberry",
-    userName: "熊大",
-    userType: "1",
-    email: "koi@qq.com",
-    phone: "18666666666",
-    sex: "1",
-    avatar: "https://img1.baidu.com/it/u=1544796506,2220725573&fm=253&fmt=auto&app=120&f=JPEG?w=501&h=500",
-    userStatus: "0",
-    remark: "熊出没",
-    createTime: "2023-08-07 04:00:00"
-  },
-  {
-    userId: 15,
-    loginName: "Blueberry",
-    userName: "熊二",
-    userType: "2",
-    email: "koi@qq.com",
-    phone: "18666666666",
-    sex: "2",
-    avatar: "https://img1.baidu.com/it/u=550431475,3093096287&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=514",
-    userStatus: "0",
-    remark: "熊出没",
-    createTime: "2023-08-08 04:00:00"
-  }
-]);
+const tableList = ref<any>([]);
 
 // 查询参数
 const searchParams = ref({
   pageNo: 1, // 第几页
   pageSize: 10, // 每页显示多少条
-  loginName: "",
-  userName: "",
-  phone: ""
+  username: "",
+  nickname: "",
+  mobile: ""
 });
 
 const total = ref<number>(0);
@@ -523,9 +346,9 @@ const resetSearchParams = () => {
   searchParams.value = {
     pageNo: 1,
     pageSize: 10,
-    loginName: "",
-    userName: "",
-    phone: ""
+    username: "",
+    nickname: "",
+    mobile: ""
   };
   dateRange.value = [];
 };
@@ -552,27 +375,42 @@ const dateRange = ref();
 // 分页查询，@current-change AND @size-change都会触发分页，调用后端分页接口
 /** 数据表格 */
 const handleListPage = async () => {
-  total.value = 15;
-  // try {
-  //   loading.value = true;
-  //   tableList.value = []; // 重置表格数据
-  //   const res: any = await listPage(
-  //     koiDatePicker(searchParams.value, dateRange.value)
-  //   );
-  //   console.log("用户数据表格数据->", res.data);
-  //   tableList.value = res.data.records;
-  //   total.value = res.data.total;
-  //   loading.value = false;
-  // } catch (error) {
-  //   console.log(error);
-  //   koiNoticeError("数据查询失败，请刷新重试🌻");
-  // }
-};
-
-// 静态页面防止报错(可直接删除)
-// @ts-ignore
-const handleStaticPage = () => {
-  listPage(koiDatePicker(searchParams.value, dateRange.value));
+  try {
+    loading.value = true;
+    tableList.value = []; // 重置表格数据
+    const res: any = await listPage(koiDatePicker(searchParams.value, dateRange.value));
+    console.log("用户数据表格数据->", res.data);
+    
+    // 映射返回数据的字段名称以匹配表格中使用的字段名称
+    // 保持后端返回的原始顺序
+    if (res.data && res.data.rows) {
+      tableList.value = res.data.rows.map((item: any) => ({
+        userId: item.id,
+        loginName: item.username,
+        userName: item.nickname,
+        userStatus: item.status,
+        avatar: item.avatar,
+        email: item.email,
+        phone: item.mobile,
+        userType: item.userType,
+        sex: item.gender,
+        createTime: item.createTime,
+        remark: item.remark,
+        // 保留其他原始字段
+        ...item
+      }));
+      total.value = res.data.total;
+    } else {
+      tableList.value = [];
+      total.value = 0;
+    }
+    
+    loading.value = false;
+  } catch (error) {
+    console.log(error);
+    koiNoticeError("数据查询失败，请刷新重试🌻");
+    loading.value = false;
+  }
 };
 
 /** 数据表格[删除、批量删除等刷新使用] */
@@ -580,8 +418,30 @@ const handleTableData = async () => {
   try {
     const res: any = await listPage(koiDatePicker(searchParams.value, dateRange.value));
     // console.log("用户数据表格数据->", res.data);
-    tableList.value = res.data.records;
-    total.value = res.data.total;
+    
+    // 映射返回数据的字段名称以匹配表格中使用的字段名称
+    // 保持后端返回的原始顺序
+    if (res.data && res.data.rows) {
+      tableList.value = res.data.rows.map((item: any) => ({
+        userId: item.id,
+        loginName: item.username,
+        userName: item.nickname,
+        userStatus: item.status,
+        avatar: item.avatar,
+        email: item.email,
+        phone: item.mobile,
+        userType: item.userType,
+        sex: item.gender,
+        createTime: item.createTime,
+        remark: item.remark,
+        // 保留其他原始字段
+        ...item
+      }));
+      total.value = res.data.total;
+    } else {
+      tableList.value = [];
+      total.value = 0;
+    }
   } catch (error) {
     console.log(error);
     koiNoticeError("数据查询失败，请刷新重试🌻");
@@ -631,9 +491,9 @@ const userSexOptions = ref();
 const handleDict2 = async () => {
   try {
     userSexOptions.value = [
-      { dictLabel: "男", dictValue: "1", dictTag: "primary", dictColor: "" },
-      { dictLabel: "女", dictValue: "2", dictTag: "danger", dictColor: "" },
-      { dictLabel: "未知", dictValue: "3", dictTag: "info", dictColor: "" }
+      { dictLabel: "男", dictValue: "0", dictTag: "primary", dictColor: "" },
+      { dictLabel: "女", dictValue: "1", dictTag: "danger", dictColor: "" },
+      { dictLabel: "未知", dictValue: "2", dictTag: "info", dictColor: "" }
     ];
     // const res: any = await listDataByType("sys_user_sex");
     // console.log("字典数据", res.data);
@@ -666,6 +526,10 @@ const handleAdd = () => {
   // 标题
   title.value = "用户添加";
   form.value.userStatus = "0";
+  // 添加用户时密码字段必填
+  const passwordRule = rules.password[0];
+  passwordRule.required = true;
+  passwordRule.message = "请输入密码";
 };
 
 /** 回显数据 */
@@ -676,12 +540,30 @@ const handleEcho = async (id: any) => {
     return;
   }
   try {
+    loading.value = true;
     const res: any = await getById(id);
     console.log(res.data);
-    form.value = res.data;
+    if (res.data) {
+      // 映射后端返回的字段到表单字段
+      form.value = {
+        userId: res.data.id,
+        userTitle: res.data.nickname,
+        userType: res.data.userType,
+        userStatus: res.data.status,
+        avatar: res.data.avatar,
+        phone: res.data.mobile,
+        remark: res.data.remark,
+        // 保留其他原始字段
+        ...res.data
+      };
+    } else {
+      koiMsgWarning("未找到用户数据");
+    }
+    loading.value = false;
   } catch (error) {
-    koiNoticeError("数据获取失败，请刷新重试🌻");
-    console.log(error);
+    console.error("获取用户详情失败:", error);
+    koiNoticeError("数据获取失败，请检查网络连接或联系管理员🌻");
+    loading.value = false;
   }
 };
 
@@ -697,10 +579,16 @@ const handleUpdate = async (row?: any) => {
   const userId = row ? row.userId : ids.value[0];
   if (userId == null || userId == "") {
     koiMsgError("请选择需要修改的数据🌻");
+    koiDrawerRef.value.koiClose(); // 关闭抽屉
+    return; // 提前返回
   }
   console.log(userId);
   // 回显数据
   handleEcho(userId);
+  // 修改用户时密码字段可选
+  const passwordRule = rules.password[0];
+  passwordRule.required = false;
+  passwordRule.message = "留空表示不修改密码";
 };
 
 // 添加 OR 修改抽屉Ref
@@ -717,7 +605,9 @@ let form = ref<any>({
   userStatus: "",
   avatar: "",
   phone: "",
-  remark: ""
+  remark: "",
+  username: "",
+  password: ""
 });
 
 /** 清空表单数据 */
@@ -735,7 +625,9 @@ const resetForm = () => {
     userStatus: "",
     avatar: "",
     phone: "",
-    remark: ""
+    remark: "",
+    username: "",
+    password: ""
   };
 };
 
@@ -743,7 +635,9 @@ const resetForm = () => {
 const rules = reactive({
   userTitle: [{ required: true, message: "请输入用户名字", trigger: "blur" }],
   userType: [{ required: true, message: "请输入用户类型", trigger: "blur" }],
-  userStatus: [{ required: true, message: "请输入选择用户状态", trigger: "blur" }]
+  userStatus: [{ required: true, message: "请输入选择用户状态", trigger: "blur" }],
+  username: [{ required: true, message: "请输入登录账号", trigger: "blur" }],
+  password: [{ required: true, message: "请输入密码", trigger: "blur" }]
 });
 
 // 确定按钮是否显示Loading
@@ -756,44 +650,40 @@ const handleConfirm = () => {
   (formRef.value as any).validate(async (valid: any) => {
     if (valid) {
       console.log("表单ID", form.value.userId);
-      if (form.value.userId != null && form.value.userId != "") {
-        try {
-          await update(form.value);
+      try {
+        // 准备提交的数据，根据API需要的格式转换字段
+        const submitData = {
+          id: form.value.userId,
+          username: form.value.username,
+          nickname: form.value.userTitle,
+          password: form.value.password,
+          userType: form.value.userType,
+          status: form.value.userStatus,
+          avatar: form.value.avatar,
+          mobile: form.value.phone,
+          remark: form.value.remark
+        };
+        
+        if (form.value.userId != null && form.value.userId != "") {
+          // 修改用户，如果密码为空则从提交数据中删除
+          if (!submitData.password) {
+            delete submitData.password;
+          }
+          await update(submitData);
           koiNoticeSuccess("修改成功🌻");
-          confirmLoading.value = false;
-          koiDrawerRef.value.koiQuickClose();
-          resetForm();
-          handleListPage();
-        } catch (error) {
-          console.log(error);
-          confirmLoading.value = false;
-          koiNoticeError("修改失败，请刷新重试🌻");
-        }
-      } else {
-        try {
-          await add(form.value);
+        } else {
+          await add(submitData);
           koiNoticeSuccess("添加成功🌻");
-          confirmLoading.value = false;
-          koiDrawerRef.value.koiQuickClose();
-          resetForm();
-          handleListPage();
-        } catch (error) {
-          console.log(error);
-          confirmLoading.value = false;
-          koiNoticeError("添加失败，请刷新重试🌻");
         }
+        confirmLoading.value = false;
+        koiDrawerRef.value.koiQuickClose();
+        resetForm();
+        handleListPage();
+      } catch (error) {
+        console.log(error);
+        confirmLoading.value = false;
+        koiNoticeError(form.value.userId ? "修改失败，请刷新重试🌻" : "添加失败，请刷新重试🌻");
       }
-
-      // let loadingTime = 1;
-      // setInterval(() => {
-      //   loadingTime--;
-      //   if (loadingTime === 0) {
-      //     koiNoticeSuccess("朕让你提交了么？信不信锤你🌻");
-      //     confirmLoading.value = false;
-      //     resetForm();
-      //     koiDrawerRef.value.koiQuickClose();
-      //   }
-      // }, 1000);
     } else {
       koiMsgError("验证失败，请检查填写内容🌻");
       confirmLoading.value = false;
@@ -836,7 +726,7 @@ const koiDialogRef = ref();
 const handleAssignRoles = async () => {
   try {
     // 传递当前登录用户ID
-    const res: any = await listNormalRole(1);
+    const res: any = await listNormalRole(ids.value[0]);
     transferLeftList.value = res.data.data1; // 左侧所有数据，右边出现一样的会自动进行去除
     transferRightList.value = res.data.data2;
   } catch (error) {
@@ -846,33 +736,8 @@ const handleAssignRoles = async () => {
   koiDialogRef.value.koiOpen();
 };
 // 右侧选择数据，必须是['1']数据
-const transferRightList = ref(["1"]);
-const transferLeftList = ref<any>([
-  {
-    label: "王者农药",
-    value: "1"
-  },
-  {
-    label: "QQ飞车",
-    value: "2"
-  },
-  {
-    label: "举例数据",
-    value: "3"
-  },
-  {
-    label: "三国杀",
-    value: "4"
-  },
-  {
-    label: "和平精英",
-    value: "5"
-  },
-  {
-    label: "刺激战场",
-    value: "6"
-  }
-]);
+const transferRightList = ref<string[]>([]);
+const transferLeftList = ref<any>([]);
 
 /** 右侧列表元素变化时触发 */
 const handleTransferChange = async (value: any) => {
@@ -933,6 +798,18 @@ const handleBatchDelete = () => {
     .catch(() => {
       koiMsgError("已取消🌻");
     });
+};
+
+/** 日期格式化 */
+const formatDate = (date: string) => {
+  const d = new Date(date);
+  const year = d.getFullYear();
+  const month = (d.getMonth() + 1).toString().padStart(2, "0");
+  const day = d.getDate().toString().padStart(2, "0");
+  const hours = d.getHours().toString().padStart(2, "0");
+  const minutes = d.getMinutes().toString().padStart(2, "0");
+  const seconds = d.getSeconds().toString().padStart(2, "0");
+  return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
 };
 </script>
 

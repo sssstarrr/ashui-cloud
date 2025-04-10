@@ -82,7 +82,7 @@
         <el-table-column type="selection" width="55" align="center" />
         <el-table-column label="序号" prop="userId" width="50px" align="center">
           <template #default="scope">
-            {{ scope.row.userId }}
+            {{ (searchParams.pageNo - 1) * searchParams.pageSize + scope.$index + 1 }}
           </template>
         </el-table-column>
         <el-table-column

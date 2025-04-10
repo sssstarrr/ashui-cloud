@@ -153,6 +153,39 @@ export const staticRouter: RouteRecordRaw[] = [
         }
       }
     ]
+  },
+  // 添加存储配置路由
+  {
+    path: "/system/storage", // 路由访问路径[唯一]
+    name: "storagePage", // 命名路由[唯一]
+    component: Layout, // 一级路由，可以将子路由放置Main模块中
+    meta: {
+      title: "存储配置", // 标题
+      enName: "Storage Config", // 英文名称
+      icon: "Folder", // 图标
+      isHide: "1", // 代表路由在菜单中是否隐藏，是否隐藏[0隐藏，1显示]
+      isLink: "", // 是否外链[有值则是外链]
+      isKeepAlive: "0", // 是否缓存路由数据[0是，1否]
+      isFull: "1", // 是否缓存全屏[0是，1否]
+      isAffix: "1" // 是否缓存固定路由[0是，1否]
+    },
+    children: [
+      {
+        path: "/system/storage/index", // 路由访问路径[唯一]
+        name: "storageConfigPage", // 命名路由[唯一]
+        component: () => import("@/views/system/storage/index.vue"), // 引入存储配置页面
+        meta: {
+          title: "存储配置", // 标题
+          enName: "Storage Config", // 英文名称
+          icon: "Upload", // 图标
+          isHide: "1", // 代表路由在菜单中是否隐藏，是否隐藏[0隐藏，1显示]
+          isLink: "", // 是否外链[有值则是外链]
+          isKeepAlive: "0", // 是否缓存路由数据[0是，1否]
+          isFull: "1", // 是否缓存全屏[0是，1否]
+          isAffix: "1" // 是否缓存固定路由[0是，1否]
+        }
+      }
+    ]
   }
   /** 系统管理 */
   // {

@@ -74,7 +74,7 @@ interface IUploadImageProps {
 // 接收父组件参数
 const props = withDefaults(defineProps<IUploadImageProps>(), {
   imageUrl: "",
-  action: "/api/system/user/profile/avatar",
+  action: "/system/user/profile/avatar",
   drag: true,
   disabled: false,
   fileSize: 3,
